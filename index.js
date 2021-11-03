@@ -68,7 +68,7 @@ async function run() {
                 output += data.toString();
             }
         }
-        await exec.exec('pylint', [path, '-f', 'json'], options);
+        await exec.exec('/bin/bash', ['-c', 'pylint', path, '-f', 'json'], options);
 
         // Parse pylint output
         const pylint_output = JSON.parse(output);
