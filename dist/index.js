@@ -9738,6 +9738,7 @@ const exec = __nccwpck_require__(2049);
 const github = __nccwpck_require__(3134);
 let fail = true;
 let pr_message = true;
+let output = '';
 const default_no_error_message = 'No lint errors found';
 
 function commentPr(message) {
@@ -9793,7 +9794,6 @@ async function run() {
         await exec.exec('pip', ['install', 'pylint']);
 
         // Run pylint
-        let output = '';
         let options = {};
         options.listeners = {
             stdout: (data) => {
@@ -9804,7 +9804,7 @@ async function run() {
             }
         }
         await exec.exec('/bin/bash', ['-c', `pylint ${path} -f json`], options);
-
+    } catch (error) {
         // Parse pylint output
         const pylint_output = JSON.parse(output);
         const pylint_errors = pylint_output.filter(message => message.type == 'error');
@@ -9826,8 +9826,6 @@ async function run() {
         if ((fail) && (message !== default_no_error_message)) {
             core.setFailed(message);
         }
-    } catch (error) {
-        core.setFailed(error.message);
     }
 }
 
