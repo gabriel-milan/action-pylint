@@ -47,49 +47,53 @@ function buildMessage(pylint_errors, pylint_warnings, pylint_info, pylint_conven
     return message;
 }
 
-try {
-    // Get inputs
-    const path = core.getInput('path');
-    fail = core.getInput('fail');
-    pr_message = core.getInput('pr-message');
+async function run() {
+    try {
+        // Get inputs
+        const path = core.getInput('path');
+        fail = core.getInput('fail');
+        pr_message = core.getInput('pr-message');
 
-    // Install pylint
-    await exec.exec('pip', ['install', 'pylint']);
+        // Install pylint
+        await exec.exec('pip', ['install', 'pylint']);
 
-    // Run pylint
-    let output = '';
-    const options = {};
-    options.listeners = {
-        stdout: (data) => {
-            output += data.toString();
-        },
-        stderr: (data) => {
-            output += data.toString();
+        // Run pylint
+        let output = '';
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                output += data.toString();
+            },
+            stderr: (data) => {
+                output += data.toString();
+            }
         }
+        await exec.exec('pylint', [path, '-f', 'json'], options);
+
+        // Parse pylint output
+        const pylint_output = JSON.parse(output);
+        const pylint_errors = pylint_output.filter(message => message.type == 'error');
+        const pylint_warnings = pylint_output.filter(message => message.type == 'warning');
+        const pylint_info = pylint_output.filter(message => message.type == 'info');
+        const pylint_convention = pylint_output.filter(message => message.type == 'convention');
+        const pylint_refactor = pylint_output.filter(message => message.type == 'refactor');
+
+        // Builds message
+        const message = buildMessage(pylint_errors, pylint_warnings, pylint_info, pylint_convention, pylint_refactor);
+        console.log(message);
+
+        // Comment on PR
+        if ((pr_message) && (message !== default_no_error_message)) {
+            commentPr(message);
+        }
+
+        // Fail if needed
+        if ((fail) && (message !== default_no_error_message)) {
+            core.setFailed(message);
+        }
+    } catch (error) {
+        core.setFailed(error.message);
     }
-    await exec.exec('pylint', [path, '-f', 'json'], options);
-
-    // Parse pylint output
-    const pylint_output = JSON.parse(output);
-    const pylint_errors = pylint_output.filter(message => message.type == 'error');
-    const pylint_warnings = pylint_output.filter(message => message.type == 'warning');
-    const pylint_info = pylint_output.filter(message => message.type == 'info');
-    const pylint_convention = pylint_output.filter(message => message.type == 'convention');
-    const pylint_refactor = pylint_output.filter(message => message.type == 'refactor');
-
-    // Builds message
-    const message = buildMessage(pylint_errors, pylint_warnings, pylint_info, pylint_convention, pylint_refactor);
-    console.log(message);
-
-    // Comment on PR
-    if ((pr_message) && (message !== default_no_error_message)) {
-        commentPr(message);
-    }
-
-    // Fail if needed
-    if ((fail) && (message !== default_no_error_message)) {
-        core.setFailed(message);
-    }
-} catch (error) {
-    core.setFailed(error.message);
 }
+
+run();
