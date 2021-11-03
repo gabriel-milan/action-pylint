@@ -9736,8 +9736,8 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(5127);
 const exec = __nccwpck_require__(2049);
 const github = __nccwpck_require__(3134);
-const fail = true;
-const pr_message = true;
+let fail = true;
+let pr_message = true;
 const default_no_error_message = 'No lint errors found';
 
 function commentPr(message) {
