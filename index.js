@@ -17,7 +17,7 @@ function commentPr(message) {
 }
 
 function parseLintMessage(lint_message) {
-    return `${lint_message.type} [${lint_message.message-id}] ${lint_message.message} (${lint_message.path}:${lint_message.line}:${lint_message.column})`;
+    return `${lint_message.type} [${lint_message['message-id']}] ${lint_message.message} (${lint_message.path}:${lint_message.line}:${lint_message.column})`;
 }
 
 function buildMessage(pylint_errors, pylint_warnings, pylint_info, pylint_convention, pylint_refactor) {
