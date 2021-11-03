@@ -1,8 +1,8 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const github = require('@actions/github');
-const fail = true;
-const pr_message = true;
+let fail = true;
+let pr_message = true;
 const default_no_error_message = 'No lint errors found';
 
 function commentPr(message) {
