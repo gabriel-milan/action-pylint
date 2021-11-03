@@ -3,9 +3,8 @@ description: "Runs pylint and sends errors in a PR message"
 author: Gabriel Gazola Milan
 inputs:
   path:
-    description: "Path of files (default is **/*.py)"
+    description: "Path of files"
     required: true
-    default: "**/*.py"
   fail:
     description: "If true, the action will fail if pylint finds errors (default is true)"
     required: true
