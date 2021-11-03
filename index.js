@@ -59,7 +59,7 @@ async function run() {
 
         // Run pylint
         let output = '';
-        const options = {};
+        let options = {};
         options.listeners = {
             stdout: (data) => {
                 output += data.toString();
