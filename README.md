@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Lint
-        uses: gabriel-milan/action-pylint@master
+        uses: gabriel-milan/action-pylint@v1
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}} # GitHub token
           path: "./*.py" # Glob pattern for files to lint
