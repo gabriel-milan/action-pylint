@@ -29263,7 +29263,7 @@ const default_no_error_message = 'No lint errors found';
 
 function commentPr(message) {
     const context = github.context;
-    const client = github.getOctokit(process.env.GITHUB_TOKEN);
+    const client = new github.GitHub(process.env.GITHUB_TOKEN);
     client.issues.createComment({
         ...context.repo,
         issue_number: context.payload.pull_request.number,
