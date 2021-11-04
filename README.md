@@ -20,7 +20,8 @@ jobs:
       - name: Lint
         uses: gabriel-milan/action-pylint@master
         with:
-          path: "**/*.py" # Glob pattern for files to lint
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}} # GitHub token
+          path: "./*.py" # Glob pattern for files to lint
           fail: true # Fail the action if pylint errors are found
           pr-message: true # Send a PR message if pylint errors are found
 ```

@@ -2,6 +2,9 @@ name: "Pylint action"
 description: "Runs pylint and sends errors in a PR message"
 author: Gabriel Gazola Milan
 inputs:
+  GITHUB_TOKEN:
+    description: "GitHub token"
+    required: true
   path:
     description: "Path of files"
     required: true

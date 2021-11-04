@@ -3,12 +3,13 @@ const exec = require('@actions/exec');
 const github = require('@actions/github');
 let fail = true;
 let pr_message = true;
+let GITHUB_TOKEN = '';
 let output = '';
 const default_no_error_message = 'No lint errors found';
 
-function commentPr(message) {
+function commentPr(message, token) {
     const context = github.context;
-    const client = github.getOctokit(process.env.GITHUB_TOKEN);
+    const client = github.getOctokit(token);
     client.issues.createComment({
         ...context.repo,
         issue_number: context.payload.pull_request.number,
@@ -54,6 +55,7 @@ async function run() {
         const path = core.getInput('path');
         fail = core.getInput('fail');
         pr_message = core.getInput('pr-message');
+        GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
 
         // Install pylint
         await exec.exec('pip', ['install', 'pylint']);
@@ -84,7 +86,7 @@ async function run() {
 
         // Comment on PR
         if ((pr_message) && (message !== default_no_error_message)) {
-            commentPr(message);
+            commentPr(message, GITHUB_TOKEN);
         }
 
         // Fail if needed
