@@ -3,4 +3,4 @@ def some():
 
 
 def another():
-    return "One"
+    return "One "
